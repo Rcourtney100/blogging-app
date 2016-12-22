@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script type="text/javascript" src="js/script.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">	
+</head>
+<body>
+
+		<header>
+			<nav>
+				<a href="/"><button class="nav-button" type="button">Home</button></a>
+				<a href="/sign_up"><button class="nav-button" type="button">Sign Up</button></a>
+				<a href="/sign_in"><button class="nav-button" type="button">Sign In</button></a>
+				<a href="/profile"><button class="nav-button" type="button">Profile</button></a>
+				<a href="/users"><button class="nav-button" type="button">Users</button></a>
+				<a href="/sign_out"><button class="nav-button" type="button">Sign Out</button></a>
+			</nav>
+		</header>
+
+<p>Welcome to... The HaLaLBLOG!</p>
+
+<div>
+<%= flash[:notice] if flash[:notice]%>
+<%= flash[:alert] if flash[:alert]%>
+</div>
+
+<%= yield %>
+
+</body>
+</html>
