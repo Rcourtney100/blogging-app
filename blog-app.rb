@@ -59,6 +59,19 @@ get '/user/new' do
 	erb :new_user
 end
 
+post '/new_user' do
+  current_user
+  params.each do |type, value|
+    if value == ""
+      params.except!(type)
+      puts params
+    else
+    @current_user.profile.update({type => value})
+    end
+  end
+  redirect '/profile'
+end
+
 # delete
 post '/user/:id/delete' do
 	@user = User.find(params['id'])
@@ -112,4 +125,22 @@ post '/logout' do
 	session[:user_id]=nil
 	redirect '/'
 end	
+
+post '/sign_up' do
+	@user = User.where(username: params[:username]).first
+	if @user.nil?
+		@user = User.create(username: params[:username], password: params[:password], email: params[:email])
+		flash[:notice] = 'Congratulations! You have successfully signed up and edited your profile.'	
+		@profile = Profile.create(fname: params[:fname], city: params[:city], birthday: params[:birthday], lname: params[:lname])
+		@user.profile = @profile
+		@user.save
+		erb :edit_profile
+	else
+		flash[:alert] = 'The username: #{params[:username] has been taken'
+		redirect '/sign_up_failed'
+	end
+		session[:user_id] = @user.id
+		current_user
+		erb :edit_profile
+end
 
