@@ -1,9 +1,10 @@
-<% if @user %>
-
-<h1> Welcome, <%= @user.name %> </h1>
-
-<% end %>
-
-<p>
-<%= @display_text %>
-</p>
+</div>
+  	<div class="feed">
+  		<h1 class="feedheader">What's New...</h1>
+	  
+	  <% @posts.each do |post| %>
+ 	   	<p id="post_name"> <%= post.user.username if post.user %></p>
+ 		    <p id="post_display"> <%= post.content %></p>
+  		<% end %>
+  
+  	</div>

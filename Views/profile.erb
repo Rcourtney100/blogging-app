@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> User Profile </title>
+	</head>
+		<body>
+			<br>
+				<br>
+				<br>
+				<p class="profile_header"> Your Profile Page </p>
+				<div class="profile"> 
+					<img class="default_photo" src="images/profile.jpg" alt="default_photo">
+				<br>
+				<div class="user_info_top">
+					<p>Username: <%= @current_user.username %></p>
+					<p>User ID: <%= @current_user.id %></p>
+				</div>
+				<br>
+					<p>Email: <%= @current_user.email %></p>
+					<p>First Name: <%= @current_user.profile.fname %></p>
+					<p>Last Name: <%= @current_user.profile.lname %></p>
+				</div>
+
+			<div class="profile_options">
+				<a href="/edit_profile"><button class="nav_button" type="button">Edit Your Profile</button></a>
+				<a href="/delete_profile"><button class="nav_button" type="button">Delete Your Profile</button></a>
+			</div>
+			<br>
+
+		<div id="new_post">
+			<form id="post_form" method="post" action="/post">
+				<label id="post_label" for="post">Write a Post!</label>
+				<br>
+				<br>
+				<textarea name="post" placeholder="content"></textarea>
+				<br>
+				<input class="button" type="submit" value="Post">
+			</form>
+		</div>
+		<br>
+		<br>
+		<br>
+
+		<div id="recent_posts">
+
+			<% @posts = @posts.reverse 
+				@posts.each do |post| %>
+					<p><%= post.content %></p>
+				<% end %>
+			
+		</div>
+
+		</body>
+</html>

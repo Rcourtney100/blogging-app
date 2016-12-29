@@ -11,21 +11,69 @@ def current_user
 	if session[:user_id]
 		@current_user = User.find(session[:user_id])
 	end
-end		
-
-get '/users' do
-	@users=User.all
-	erb :users
 end	
 
-get '/' do 
-	if session[:user_id] 
-
-		@user = User.find(session[:user_id])
-	end
-
-	@display_text = "Welcome to my Blog"
+get '/' do
+	@posts = Post.order(id: :desc).take(10)
 	erb :home
+end	
+
+get '/log_in' do
+	erb :log_in
+end	
+
+post '/log_in' do
+	@user = User.where(username: params[:username]).first
+		if @user.password == params[:password]
+			session[:user_id] = @user.id
+			current_user
+			redirect '/profile'
+		else
+			redirect  '/log_in_failed'
+		end
+end
+
+get '/sign_up' do
+	erb :sign_up
+end
+
+post '/sign_up' do
+	@user = User.where(username: params[:username]).first
+	if @user.nil?
+		@user = User.create(username: params[:username], password: params[:password], email: params[:email])
+		flash[:notice] = 'Congratulations! You have successfully signed up and edited your profile.'	
+		@profile = Profile.create(fname: params[:fname], lname: params[:lname])
+		@user.profile = @profile
+		@user.save
+		erb :edit_profile
+	else
+		flash[:alert] = 'The username: #{params[:username] is already in use'
+		redirect '/sign_up_failed'
+	end
+		session[:user_id] = @user.id
+		current_user
+		erb :edit_profile
+end	
+
+get '/sign_up_failed' do
+	erb :sign_up_failed
+end	
+
+get '/success' do
+	erb :success
+end
+
+get '/log_in_failed' do
+	erb :sign_in_failed
+end
+
+post '/login_success' do
+	erb :success
+end
+
+get '/log_out' do
+	session.clear
+	erb :log_in
 end
 
 get '/profile' do 
@@ -41,25 +89,18 @@ post '/user/create' do
 	redirect "/users/#{@user.id}"
 end
 
-# update
-
-get '/user/:id/edit' do
-	@user= User.find(params['id'])
-	erb :edit_user
+get '/edit_profile' do
+	erb :edit_profile
 
 end
 
-post '/user/:id/update' do
-	@user = User.find(params['id'])
-	@user.update(name: params['name'], email: params['email'])
-	redirect :user
+post '/edit_profile' do
+	current_user
+	current_user.profile.update(fname:params[:fname], lname:params[:lname])
+	erb :edit_profile
 end	
 
-get '/user/new' do 
-	erb :new_user
-end
-
-post '/new_user' do
+post '/new_profile' do
   current_user
   params.each do |type, value|
     if value == ""
@@ -72,75 +113,34 @@ post '/new_user' do
   redirect '/profile'
 end
 
-# delete
-post '/user/:id/delete' do
-	@user = User.find(params['id'])
-	@user.destroy
-	session[:user_id]=nil
-	redirect "/"
+post '/delete_profile' do
+	current_user
+	current_user.destroy
+	erb :home
 end
 
-# signin
-
-get '/sign_in' do
-	erb :sign_in
-end	
-
-post '/sign_in' do
-	@user = User.where(username: params[:username]).first
-		if @user.password == params[:password]
-			session[:user_id] = @user.id
-			current_user
-			redirect '/profile'
-		else
-			flash[:alert] = "Sign in Failed"
-		end
+get '/:username' do
+	@user = User.find_by(name: params[:name])
+	@profile = Profile.find_by(user_id: @user.id)
+	@posts = Post.where(user_id: @user.id)
+	erb :user
 end
 
-# login	
-post '/login' do
-	@user = User.where(email: params['email']).first
-	if @user && @user.password==params['password']
-		session[:user_id] = @user.id
-		flash[:notice] = "You have successfully logged in."
-		redirect "/users/#{session[:user_id]}"
-	else
-		flash[:alert] = "You were not able to sign in."
-		redirect '/sign_in'	
-end	
+get '/users' do
+	@users = User.all
+	erb :users
 end
 
-#read
-get '/user/:id' do
-	if current_user.id==params['id']
-		@user = User.find(params['id'])
-		erb :user
-	else
-		redirect '/'
+get '/user' do
+	@users = User.all
+	erb :user
+end		
+
+post '/post' do
+	current_user
+	if params[:post] != ""
+		current_user.posts << Post.create(content: params[:post])
 	end
-end			
-
-#logout
-post '/logout' do
-	session[:user_id]=nil
-	redirect '/'
-end	
-
-post '/sign_up' do
-	@user = User.where(username: params[:username]).first
-	if @user.nil?
-		@user = User.create(username: params[:username], password: params[:password], email: params[:email])
-		flash[:notice] = 'Congratulations! You have successfully signed up and edited your profile.'	
-		@profile = Profile.create(fname: params[:fname], city: params[:city], birthday: params[:birthday], lname: params[:lname])
-		@user.profile = @profile
-		@user.save
-		erb :edit_profile
-	else
-		flash[:alert] = 'The username: #{params[:username] has been taken'
-		redirect '/sign_up_failed'
-	end
-		session[:user_id] = @user.id
-		current_user
-		erb :edit_profile
+	redirect '/profile'
 end
 
