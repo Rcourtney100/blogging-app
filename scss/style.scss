@@ -1,7 +1,32 @@
-body {
-	background-color: white;
-}
+@import "home";
+@import "log_in";
+
+
 
 h1 {
-	font-size: 2px;
+	padding: 40px;
+	font-size: 40px;
 }
+
+.navbar-fixed-top{
+	list-style-type: none;
+	margin: 0;
+	padding: 20 px;
+	overflow: hidden;
+	background-color: #333;
+	position: absolute;
+}
+
+button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0 auto;
+}
+
+

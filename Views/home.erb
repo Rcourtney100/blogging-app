@@ -1,6 +1,15 @@
-</div>
-  	<div class="feed">
-  		<h1 class="feedheader">What's New...</h1>
+
+
+<div class = "welcome-msg">
+	<h1 class="greeting">Welcome to the Philly HALALBLOG!</h1>
+</div>	
+
+
+<img class="home-pic" src = "Images/D6EBnWJ.jpeg">
+
+
+  	<div class="feed" align="center">
+  		<h2 class="feedheader">What's New...</h2>
 	  
 	  <% @posts.each do |post| %>
  	   	<p id="post_name"> <%= post.user.username if post.user %></p>
@@ -8,3 +17,5 @@
   		<% end %>
   
   	</div>
+
+

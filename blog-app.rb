@@ -11,25 +11,25 @@ def current_user
 	if session[:user_id]
 		@current_user = User.find(session[:user_id])
 	end
-end	
+end
 
 get '/' do
 	@posts = Post.order(id: :desc).take(10)
 	erb :home
-end	
+end
 
 get '/log_in' do
 	erb :log_in
-end	
+end
 
 post '/log_in' do
-	@user = User.where(username: params[:username]).first
+	@user = User.where(email: params[:email]).first
 		if @user.password == params[:password]
 			session[:user_id] = @user.id
 			current_user
 			redirect '/profile'
 		else
-			redirect  '/log_in_failed'
+			erb  :log_in_failed
 		end
 end
 
@@ -41,7 +41,7 @@ post '/sign_up' do
 	@user = User.where(username: params[:username]).first
 	if @user.nil?
 		@user = User.create(username: params[:username], password: params[:password], email: params[:email])
-		flash[:notice] = 'Congratulations! You have successfully signed up and edited your profile.'	
+		flash[:notice] = 'Congratulations! You have successfully signed up and edited your profile.'
 		@profile = Profile.create(fname: params[:fname], lname: params[:lname])
 		@user.profile = @profile
 		@user.save
@@ -53,11 +53,11 @@ post '/sign_up' do
 		session[:user_id] = @user.id
 		current_user
 		erb :edit_profile
-end	
+end
 
 get '/sign_up_failed' do
 	erb :sign_up_failed
-end	
+end
 
 get '/success' do
 	erb :success
@@ -76,11 +76,11 @@ get '/log_out' do
 	erb :log_in
 end
 
-get '/profile' do 
+get '/profile' do
 	current_user
 	@posts = current_user.posts
 	erb :profile
-end	
+end
 
 
 post '/user/create' do
@@ -98,7 +98,7 @@ post '/edit_profile' do
 	current_user
 	current_user.profile.update(fname:params[:fname], lname:params[:lname])
 	erb :edit_profile
-end	
+end
 
 post '/new_profile' do
   current_user
@@ -116,7 +116,7 @@ end
 post '/delete_profile' do
 	current_user
 	current_user.destroy
-	erb :home
+	redirect '/home'
 end
 
 get '/:username' do
@@ -134,7 +134,7 @@ end
 get '/user' do
 	@users = User.all
 	erb :user
-end		
+end
 
 post '/post' do
 	current_user
@@ -144,3 +144,7 @@ post '/post' do
 	redirect '/profile'
 end
 
+get '/posts/:id' do
+    @post = Post.find(params[:id])
+    erb :post
+end

@@ -3,13 +3,14 @@
 <head>
 	<title>Home</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Original+Surfer" rel="stylesheet">
 	<script type="text/javascript" src="js/script.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css">	
 </head>
 <body>
 
 		<header>
-			<nav>
+			<nav class="navbar-fixed-top">
 				<a href="/"><button class="nav-button" type="button">Home</button></a>
 				<a href="/sign_up"><button class="nav-button" type="button">Sign Up</button></a>
 				<a href="/log_in"><button class="nav-button" type="button">Log In</button></a>
@@ -19,9 +20,8 @@
 			</nav>
 		</header>
 
-	<img class="main-picture" src ="Images/images.jpg">	
+	<!-- <img class="main-picture" src ="Images/D6ebnWJ.jpeg">	 -->
 
-<h1>Welcome to My HalalBLOG!</h1>
 
 <div>
 <%= flash[:notice] if flash[:notice]%>
